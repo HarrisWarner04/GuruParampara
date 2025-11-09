@@ -4,6 +4,50 @@ const express = require('express');
 const session = require('express-session');
 require('dotenv').config();
 
+// GitHub auto-commit helper
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+
+async function commitToGitHub(filename, content) {
+  const repoOwner = "HarrisWarner04";  // 🔹 replace with your GitHub username
+  const repoName = "GuruParampara	";     // 🔹 your repo name
+  const branch = "main";
+
+  const url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/data/${filename}`;
+
+  try {
+    // Get current file SHA (required by GitHub API)
+    const res = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+        Accept: "application/vnd.github.v3+json",
+      },
+    });
+    const data = await res.json();
+    const sha = data.sha;
+
+    // Commit updated file
+    const updateRes = await fetch(url, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+        Accept: "application/vnd.github.v3+json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: `Auto-update ${filename}`,
+        content: Buffer.from(JSON.stringify(content, null, 2)).toString("base64"),
+        sha,
+        branch,
+      }),
+    });
+
+    const result = await updateRes.json();
+    console.log(`✅ ${filename} committed to GitHub`);
+  } catch (err) {
+    console.error(`❌ Failed to commit ${filename}:`, err.message);
+  }
+}
+
 const app = express();
 
 // Config
@@ -63,8 +107,9 @@ function readJsonDb() {
 	catch { return []; }
 }
 
-function writeJsonDb(records) {
-	fs.writeFileSync(JSON_DB, JSON.stringify(records, null, 2));
+async function writeJsonDb(records) {
+  fs.writeFileSync(JSON_DB, JSON.stringify(records, null, 2));
+  await commitToGitHub("users.json", records);
 }
 
 // Event management helpers
@@ -73,9 +118,11 @@ function readEventsDb() {
 	catch { return []; }
 }
 
-function writeEventsDb(events) {
-	fs.writeFileSync(EVENTS_DB, JSON.stringify(events, null, 2));
+async function writeEventsDb(events) {
+  fs.writeFileSync(EVENTS_DB, JSON.stringify(events, null, 2));
+  await commitToGitHub("events.json", events);
 }
+
 
 // Routes
 app.get('/', (req, res) => {
