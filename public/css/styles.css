@@ -819,3 +819,99 @@ footer a:hover {
   background: var(--accent);
   color: white;
 }
+
+/* 🩺 Doctor Section Improvements (Balanced 5-column layout) */
+#doctors .row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+}
+
+/* Keep all doctor cards uniform height */
+.doctor-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100%;
+  min-height: 500px;
+  padding: 2rem 1.75rem;
+  border-radius: 20px;
+  background: white;
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  transition: all 0.4s ease;
+}
+
+.doctor-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-xl);
+}
+
+/* Uniform circular avatar fix */
+.doctor-avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  border: 5px solid var(--secondary);
+  margin-bottom: 1.5rem;
+  transition: transform 0.4s ease, border-color 0.4s ease;
+  box-shadow: 0 8px 24px rgba(26, 95, 58, 0.2);
+}
+
+.doctor-card:hover .doctor-avatar {
+  transform: scale(1.12);
+  border-color: var(--accent-glow);
+}
+
+/* Name & text alignment tweaks */
+.doctor-name {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+}
+
+.doctor-specialty {
+  color: var(--accent);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1.1rem;
+}
+
+.doctor-bio {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  flex-grow: 1;
+}
+
+/* Responsive fix for 5 doctor cards */
+@media (max-width: 1200px) {
+  #doctors .row {
+    gap: 1.5rem;
+  }
+  .doctor-card {
+    min-height: 460px;
+  }
+}
+
+@media (max-width: 992px) {
+  #doctors .row {
+    justify-content: center;
+  }
+  .doctor-card {
+    flex: 1 1 45%;
+    min-height: 480px;
+  }
+}
+
+@media (max-width: 768px) {
+  .doctor-card {
+    flex: 1 1 100%;
+    min-height: auto;
+  }
+}
