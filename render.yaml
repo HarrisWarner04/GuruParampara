@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 services:
   - type: web
     name: guru-parampara-clinic
@@ -17,3 +18,24 @@ services:
     # Persistent disk storage is available on free tier
     # The data/ folder will persist across deployments
 
+=======
+services:
+  - type: web
+    name: guru-parampara-clinic
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Add these environment variables in Render dashboard:
+      # - SESSION_SECRET (generate: openssl rand -base64 32)
+      # - ADMIN_USER
+      # - ADMIN_PASS
+      # PORT is automatically set by Render, don't override it
+    healthCheckPath: /
+    # Persistent disk storage is available on free tier
+    # The data/ folder will persist across deployments
+
+>>>>>>> 0a3a1db6e046d8b0e488c57522dd7cade99a3cb6
